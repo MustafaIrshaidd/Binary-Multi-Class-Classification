@@ -8,6 +8,10 @@ var iterations = document.getElementById('iterations')
 var cmd = document.getElementById("cmd")
 
 
+var Oldweight1=0
+var Oldweight2=0
+var Oldthreshold=0
+
 // array of colors
 var arrOfColors=["Black","Red","Green","Blue"];
 var indexOfDrawing;
@@ -19,7 +23,7 @@ var learning_Rate=0.5;
 var num_Of_Classes=3;
 
 // Number of Iterations
-var num_Of_Iterations=0;
+var num_Of_Iterations=100;
 
 // Coordinates Schema
 var Coordinates = {
@@ -95,7 +99,7 @@ const getCoordination=(event)=>{
     const x = event.clientX - rect.left
     const y = event.clientY - rect.top
     drawCircle(x,y,arrOfColors[indexOfDrawing])
-    console.log(`this is x :  ${x} this is y ${y}`)
+    console.log(`this is x : ${x} this is y ${y}`)
 }
 
 const numberOfClasses=(event)=>{
@@ -159,94 +163,150 @@ const Clear = (event) => {
 // Binary Training Program
 
 const stepFunc = (x)=>{  
-    return x >= 0 ? 1 : 0;
+    return x >= 0 ? 1 : -1;
 }
 
-const newWeight = ( e , x , weight)=>{
-    var dw = 0
-    var lr = learning_Rate
-    dw = lr * x * e
-    weight = weight + dw
-    return weight
+function sigmoid(x) {
+    return 1 / (1 + Math.exp(-x));
+}
+
+const newWeight = (error,input, weight)=>{
+    // e , x ,
+    // var dw = 0
+    // var lr = learning_Rate
+    // dw = lr * x * e
+    // weight = weight + dw
+    // return weight
+    var learningRate = 0.1; // Adjust the learning rate as needed
+    return weight + learningRate * error * input;
+}
+
+function newThreshold(error, threshold) {
+    var learningRate = 0.1; // Adjust the learning rate as needed
+    return threshold - learningRate * error;
 }
 
 
-const binaryClassClassification = (num_Of_Iterations)=>{
-    var data=``
-    var out
-    var e = 0
-    var weight1 =  Math.random() - 0.5;
+
+
+// const binaryClassClassification = (num_Of_Iterations)=>{
+//     var data=``
+//     var out
+//     var e = 0
+//     var weight1 =  Math.random() - 0.5;
+//     var weight2 = Math.random() - 0.5;
+//     var threshold = Math.random() - 0.5;
+//     while(num_Of_Iterations!=0){
+//         for(var j=0;j<Coordinates.Black.X_Axis.length;j++){
+//             out = ((weight1 * Coordinates.Black.X_Axis[j])) + ((weight2 * Coordinates.Black.Y_Axis[j])) - threshold
+//             e = out1 - stepFunc(out)
+//             if(e != 0){
+//                 weight1 = newWeight(e,Coordinates.Black.X_Axis[j],weight1)
+//                 weight2 = newWeight(e,Coordinates.Black.Y_Axis[j],weight2)
+//             }
+//         }
+
+//         for(var j=0;j<Coordinates.Red.X_Axis.length;j++){
+//             out = ((weight1 * Coordinates.Red.X_Axis[j])) + ((weight2 * Coordinates.Red.Y_Axis[j])) - threshold
+//             e = out1 - stepFunc(out)
+//             if(e != 0){
+//                 weight1 = newWeight(e,Coordinates.Red.X_Axis[j],weight1)
+//                 weight2 = newWeight(e,Coordinates.Red.Y_Axis[j],weight2)
+//             }
+//         }
+        
+//         num_Of_Iterations-=1
+
+//         data+=`Console
+//         <br>
+//         w1:${weight1} w2:${weight2} threshold:${threshold}
+//         <br>
+//          <span class="animate">></span>
+//         `
+//         cmd.innerHTML=data
+//     }
+//     plot(weight1,weight2,threshold)
+// }
+
+const binaryClassClassification = (num_Of_Iterations) => {
+    var data = '';
+    var out;
+    var e = 0;
+    var weight1 = Math.random() - 0.5;
     var weight2 = Math.random() - 0.5;
     var threshold = Math.random() - 0.5;
-    while(num_Of_Iterations!=0){
-        for(var j=0;j<Coordinates.Black.X_Axis.length;j++){
-            out = ((weight1 * Coordinates.Black.X_Axis[j])) + ((weight2 * Coordinates.Black.Y_Axis[j])) - threshold
-            e = 0 - stepFunc(out)
-            if(e != 0){
-                weight1 = newWeight(e,Coordinates.Black.X_Axis[j],weight1)
-                weight2 = newWeight(e,Coordinates.Black.Y_Axis[j],weight2)
-            }
+
+    while (num_Of_Iterations != 0) {
+        
+        for (var j = 0; j < Coordinates.Black.X_Axis.length; j++) {
+            out = weight1 * Coordinates.Black.X_Axis[j] + weight2 * Coordinates.Black.Y_Axis[j] - threshold;
+            e = sigmoid(out);
+            if(e==0) break;
+                weight1 = newWeight(e, Coordinates.Black.X_Axis[j], weight1);
+                weight2 = newWeight(e, Coordinates.Black.Y_Axis[j], weight2);
+                // threshold = newThreshold(e, threshold);
         }
 
-        for(var j=0;j<Coordinates.Red.X_Axis.length;j++){
-            out = ((weight1 * Coordinates.Red.X_Axis[j])) + ((weight2 * Coordinates.Red.Y_Axis[j])) - threshold
-            e = 0.3 - stepFunc(out)
-            if(e != 0){
-                weight1 = newWeight(e,Coordinates.Red.X_Axis[j],weight1)
-                weight2 = newWeight(e,Coordinates.Red.Y_Axis[j],weight2)
-            }
+        for (var j = 0; j < Coordinates.Red.X_Axis.length; j++) {
+            out = weight1 * Coordinates.Red.X_Axis[j] + weight2 * Coordinates.Red.Y_Axis[j] - threshold;
+            e = sigmoid(out);
+            if(e==0) break;
+                weight1 = newWeight(e, Coordinates.Red.X_Axis[j], weight1);
+                weight2 = newWeight(e, Coordinates.Red.Y_Axis[j], weight2);
+                // threshold = newThreshold(e, threshold);
         }
         
-        num_Of_Iterations-=1
 
-        data+=`Console
-        <br>
-        w1:${weight1} w2:${weight2} threshold:${threshold}
-        <br>
-         <span class="animate">></span>
-        `
-        cmd.innerHTML=data
+        num_Of_Iterations -= 1;
+
+        data += `Console<br>e:${e} Iteration:${num_Of_Iterations}<br><span class="animate">&gt;</span>`;
+        cmd.innerHTML = data;
     }
-    plot(weight1,weight2,threshold)
-}
 
-function drawLine(weight1, weight2, threshold) {
-    var canvasWidth  = canvas.offsetWidth;
-    var canvasHeight = canvas.offsetHeight;
-    
-    // Set the line color
-    context.strokeStyle = 'black';
-    
-    // Set the line width
-    context.lineWidth = 2;
-    
-    // Calculate the coordinates of two points on the line
-    var x1 = 0;
-    var y1 = (threshold - (weight1 * x1)) / weight2;
+    plot(weight1, weight2, threshold,"red");
+};
 
-    var x2 = canvasWidth;
-    var y2 = (threshold - (weight1 * x2)) / weight2;
+// function drawLine(weight1, weight2, threshold) {
+//     var canvasWidth  = canvas.offsetWidth;
+//     var canvasHeight = canvas.offsetHeight;
     
-    // Draw the line
-    context.beginPath();
-    context.moveTo(x1, y1);
-    context.lineTo(x2, y2);
-    context.stroke();
-  }
+//     // Set the line color
+//     context.strokeStyle = 'black';
+    
+//     // Set the line width
+//     context.lineWidth = 2;
+    
+//     // Calculate the coordinates of two points on the line
+//     var x1 = 0;
+//     var y1 = (threshold - (weight1 * x1)) / weight2;
+
+//     var x2 = canvasWidth;
+//     var y2 = (threshold - (weight1 * x2)) / weight2;
+    
+//     // Draw the line
+//     context.beginPath();
+//     context.moveTo(x1, y1);
+//     context.lineTo(x2, y2);
+//     context.stroke();
+//   }
 
 
 
 const startTraining = (event)=>{
     event.preventDefault();
-
+    plot(Oldweight1,Oldweight2, Oldthreshold,"white");
     if(num_Of_Classes==2){
         binaryClassClassification(num_Of_Iterations)
     }
     
 }
 
-function plot(weight1,weight2,threshold)
+function plot(weight1,weight2,threshold,color)
 {
+
+    Oldweight1=weight1
+    Oldweight2=weight2
+    Oldthreshold =threshold
 	var a = weight1;
     var b = weight2 * threshold;
 
@@ -267,7 +327,7 @@ function plot(weight1,weight2,threshold)
 	drawAxes(axes);
 
 	context.beginPath();
-	context.strokeStyle = "red";
+	context.strokeStyle = color;
 	context.lineWidth = 2;
 
 	for (var i=xMin; i<xMax; i++)
