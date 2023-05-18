@@ -1,34 +1,58 @@
-:root{
-    --gray:#fbfbfd;
+:root {
+  --gray: #fbfbfd;
 }
 
 .container {
-    height: 100vh;
-    width: 100% !important;
+  height: 100vh;
+  width: 100% !important;
 }
 
-canvas{
-    background-color: var(--gray);
-    cursor: pointer;
+canvas {
+  background-color: var(--gray);
+  cursor: pointer;
 }
 
-.controls{
-    height: 100% !important;
+.controls {
+  height: 100% !important;
 }
 
-.animate{
-    animation: blinking 0.4s ease-out infinite alternate;
+.animate {
+  animation: blinking 0.4s ease-out infinite alternate;
+}
+
+#cmd {
+  overflow: scroll;
 }
 
 @keyframes blinking {
-    0%{
-        color:#212529;
-    }
-    100%{
-        color:white;
-    }
+  0% {
+    color: #212529;
+  }
+  100% {
+    color: white;
+  }
 }
 
+@media (max-width: 650px) {
+  .container * {
+    height: auto !important;
+  }
 
+  .container > div > div {
+    width: 100% !important;
+  }
 
+  .controls {
+    padding: 10px 0;
+  }
 
+  .controls > div {
+    margin: 10px 0;
+  }
+
+  canvas {
+    border-color: black;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+  }
+}
