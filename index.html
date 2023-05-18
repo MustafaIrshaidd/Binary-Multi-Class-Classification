@@ -10,21 +10,65 @@
 </head>
 <body>
     <div class="container">
-        <div class="d-flex justify-content-center align-items-center h-100">
-            <div class="controls col-3 h-75 shadow">
-                hi
+        <div class="d-flex flex-lg-row flex-sm-column justify-content-center align-items-center h-100">
+            <div class="col-lg-3 col-sm-12 h-75 shadow">
+                <!-- Controls -->
+                <div class="controls d-flex flex-column justify-content-around">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="w-75">
+                            <label for="customRange1" class="form-label">Learning rate : <span id="learningRate">0.5</span></label>
+                            <input onchange="changeLearningRate(event)" type="range" class="form-range" id="customRange1">
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="w-75">
+                            <label for="iterations" class="form-label">Max iteration</label>
+                            <input onchange="getNumOfIterations(event)" type="number" id="iterations" class="form-control" placeholder="Enter a number">    
+                        </div>
+                    </div>
+                     
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="w-75">
+                            <label for="customRange2" class="form-label">Number Of Classes : <span id="numOfClasses">3</span></label>
+                            <input onchange="numberOfClasses(event)" type="range" min="2" max="4" class="form-range" id="customRange2">
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="w-75">
+                            <div class="dropdown">
+                                <a class="btn dropdown-toggle w-100 bg-dark text-white" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Choose color
+                                </a>
+                                <ul class="dropdown-menu" id="dropDown" aria-labelledby="dropdownMenuLink">
+                                    <li><a class="dropdown-item" href="#" onclick="handleDropdownSelection('Black')">Black</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="handleDropdownSelection('Red')">Red</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="handleDropdownSelection('Green')">Green</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="d-flex w-75 justify-content-evenly">
+                            <button onclick="startTraining(event)" type="button" class="btn btn-primary">Train</button>
+                            <button onclick="Clear(event)" type="button" class="btn btn-secondary">Clear</button>
+                        </div>
+                    </div>
+                </div>
             </div>
             
-            <div class="col-8 h-75 shadow">
-                <canvas id="myCanvas"></canvas>
+            <div class="col-lg-7 col-sm-12 h-75 shadow" id="parent">
+                <canvas onclick="getCoordination(event)" id="myCanvas" ></canvas>
+            </div>
+
+            <div class="col-lg-2 col-sm-12 bg-dark h-75 shadow text-white" id="cmd">
+               Console <span class="animate">></span>
             </div>
         </div>
 
     </div>
-    
-
-
-
 
     <script src="/assets/js/index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
